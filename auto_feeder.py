@@ -1,21 +1,43 @@
 from fileIO import fileopen
 from retrain_run_inference import run_inference_on_image
-time_table =[]
+from thread_test import search_time
+import time
+time_table = ["22:00", "11:00", "19:45"]
 if __name__ == '__main__':
+
+     #init으로 애완동물의 정보를 꺼낸다.
      pet_infos = fileopen() # 제품 실행시 파일에 저장되어있는 애완동물의 정보를 부른다.
 
-     #라즈베리 파이가 작동하는 타임 테이블을 만들고 시간 탐색
-     #시간탐색은 thread로 실시간 작동
+     # autofeeder은 thread로 실시간 작동한다.
+     com_time = search_time(time_table)#라즈베리 파이가 작동하는 타임 테이블을 만들고 시간을 탐색한다.
+
+     #해당 시간에 맞는 pet의 배식량을 검색한다.
+     #pet_foodAmount = pet_infos.get_foodAmount(com_time)
 
      #해당 시간표가 있을 때 배식량의 20프로를 배식한다.
-     pet_foodAmount = "1/5"
-     time_table_petname = "몽몽이"
-     #이후에 탐색 기능을 실행하여 시간표의 이름과 일치하는지 확인한다.(정확도 70이상)
-     while time_table_petname !=run_inference_on_image():
-        #30초마다 재실행한다.
-        print("30초가 지나 재탐색을 실시합니다")
-     #탐색된 뒤에는 해당 배식량에 맞게 배식기능을 돌린다. pet_foodAmount 4/5
+     #give_food(pet_foodAmount * 1/5)
 
+     #해당 시간표에 맞는 애완동물의 이름을 확인한다.
+     #pet_petName = pet_infos.get_petName(com_time)
+     pet_petName = "몽몽이"
+
+     #이후에 탐색 기능을 실행하여 시간표의 이름과 일치하는지 확인한다.(정확도 70이상)
+     time_check = 0 #3분 탐색을 위한 카운터.
+
+     while pet_petName !=run_inference_on_image():
+        #30초마다 재실행한다.
+        time_check += 30
+        time.sleep(30)
+        print("30초가 지나 재탐색을 실시합니다")
+        if time_check == 180 : #3분 동안 탐색 후 먹지 않으면 취소한다.
+            #취소된 애완동물의 정보는 로그로 저장한다.
+            print("3분이 지나 탐색을 중단합니다.")
+            break
+
+     #탐색된 뒤에는 해당 배식량에 맞게 배식기능을 돌린다. pet_foodAmount 4/5
+     #give_food(pet_foodAmount * 4/5)
+
+     #다시 되돌아가 시간 탐색을 실시한다.
 
 # 제품 실행시 파일에 저장되어있는 애완동물의 정보를 부른다.
 # 배식 시간에서 +- 10분으로 라즈베리파이의 시간을 탐색한다. (search) -> 따로 저장해두는게 좋을듯?
