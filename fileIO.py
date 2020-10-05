@@ -9,14 +9,19 @@ def filewrite(petInfo):
     petInfo_data = petInfo_petName+" "+petInfo_foodName +" "+ petInfo_foodAmount
     f.write(petInfo_data)
     f.close()
-def fileopen(petInfo_petName):
-    petTxt = petInfo_petName + ".txt"
-    f = open(petTxt, 'r')
+def fileopen():
+    f = open("pet_info.txt", 'r')
+    pet_infos =[]
     while True:
         line = f.readline()
         if not line: break
-        print(line)
+        pet_line = line.split(" ")
+        pet_info = Pet(pet_line[0],pet_line[1],pet_line[2],pet_line[3])
+        pet_infos.append(pet_info)
     f.close()
-# if __name__ == '__main__':
+    return pet_infos
+
+#if __name__ == '__main__':
 #     filewrite()
 #     fileopen()
+
