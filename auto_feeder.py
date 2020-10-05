@@ -1,6 +1,7 @@
 from fileIO import fileopen
 from retrain_run_inference import run_inference_on_image
 from thread_test import search_time
+from feeder_morter import give_food
 import time
 time_table = ["22:00", "11:00", "19:45"]
 if __name__ == '__main__':
@@ -12,13 +13,19 @@ if __name__ == '__main__':
      com_time = search_time(time_table)#라즈베리 파이가 작동하는 타임 테이블을 만들고 시간을 탐색한다.
 
      #해당 시간에 맞는 pet의 배식량을 검색한다.
-     #pet_foodAmount = pet_infos.get_foodAmount(com_time)
+     for pet_ary in pet_infos :
+         if pet_ary.foodTime == com_time :
+             pet_info = pet_ary
+             break;
+
+     pet_foodAmount = pet_info.foodAmount
+     pet_foodName = pet_info.foodName
+     pet_petName = pet_info.petName
 
      #해당 시간표가 있을 때 배식량의 20프로를 배식한다.
-     #give_food(pet_foodAmount * 1/5)
+     give_food(pet_foodName , pet_foodAmount*0.2 )
 
      #해당 시간표에 맞는 애완동물의 이름을 확인한다.
-     #pet_petName = pet_infos.get_petName(com_time)
      pet_petName = "몽몽이"
 
      #이후에 탐색 기능을 실행하여 시간표의 이름과 일치하는지 확인한다.(정확도 70이상)
@@ -35,7 +42,7 @@ if __name__ == '__main__':
             break
 
      #탐색된 뒤에는 해당 배식량에 맞게 배식기능을 돌린다. pet_foodAmount 4/5
-     #give_food(pet_foodAmount * 4/5)
+     give_food(pet_foodName, pet_foodAmount * 0.8)
 
      #다시 되돌아가 시간 탐색을 실시한다.
 
